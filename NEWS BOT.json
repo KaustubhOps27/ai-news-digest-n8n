@@ -1,0 +1,2212 @@
+{
+  "name": "NEWS BOT",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 23,
+              "triggerAtMinute": 31
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -4240,
+        1216
+      ],
+      "id": "ca27532f-9697-491a-b362-19b8ba69b4e0",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "batchSize": "=1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -3344,
+        1216
+      ],
+      "id": "4b2af11d-bc89-4464-aeab-ed18fa36acd7",
+      "name": "Loop Over Items",
+      "executeOnce": false,
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "url": "https://www.hindustantimes.com/feeds/rss/world-news/rssfeed.xml",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        -2448,
+        736
+      ],
+      "id": "0912e885-e8dc-495b-a855-057b6c91ff84",
+      "name": "INTERNATIONAL"
+    },
+    {
+      "parameters": {
+        "url": "https://www.hindustantimes.com/feeds/rss/india-news/rssfeed.xml",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        -2448,
+        928
+      ],
+      "id": "b161ed55-09bf-45d1-8b40-a85719f8ab65",
+      "name": "INDIA",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "url": "https://www.hindustantimes.com/feeds/rss/sports/rssfeed.xml",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        -2448,
+        1120
+      ],
+      "id": "7b5afd2b-8ee2-4114-a792-fffd04d8b47a",
+      "name": "SPORTS"
+    },
+    {
+      "parameters": {
+        "url": "https://www.hindustantimes.com/feeds/rss/entertainment/rssfeed.xml",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        -2448,
+        1312
+      ],
+      "id": "de39ec18-9ba9-47c6-8426-b473705fe4cb",
+      "name": "ENTERTAINMENT"
+    },
+    {
+      "parameters": {
+        "url": "https://www.hindustantimes.com/feeds/rss/technology/rssfeed.xml",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        -2448,
+        1504
+      ],
+      "id": "4fa89601-c8e8-4686-a96b-eecc3a95810e",
+      "name": "TECHNOLOGY"
+    },
+    {
+      "parameters": {
+        "url": "https://www.hindustantimes.com/feeds/rss/education/rssfeed.xml",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        -2448,
+        544
+      ],
+      "id": "98f343c6-3a05-492a-ac68-f244faaaa484",
+      "name": "EDUCATION"
+    },
+    {
+      "parameters": {
+        "numberInputs": 7
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -2000,
+        1024
+      ],
+      "id": "74a8c1d7-c66a-49c4-aaa6-0317be280a03",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "allNews",
+        "include": "specifiedFields",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        -1552,
+        1008
+      ],
+      "id": "0ca276cc-78b6-4800-b26b-4a859a072393",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a professional content summarizer. Take the following daily updates and generate a short, clear, plain-text daily briefing. Do not use bullet points, asterisks, or any markdown formatting. Use simple, readable sentences, keep each item on a new line also start new line with leaving 2 lines and use numbering for each news.\n{{ $json[\"textForLLM\"] }}\n",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        -1104,
+        1008
+      ],
+      "id": "82690e3e-6ed9-425f-b461-a1ad364f78f5",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "url": "https://www.hindustantimes.com/feeds/rss/business/rssfeed.xml",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        -2448,
+        1696
+      ],
+      "id": "f359399c-c6ea-42c2-97da-a09dfe84ee3e",
+      "name": "FINANCE"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Loop Over Items').item.json.CATEGORIES }}",
+                    "rightValue": "\"Education\"",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "id": "f011d938-ac5d-4561-b42f-ea10a5eef884"
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -2672,
+        544
+      ],
+      "id": "d1942da8-7c4a-41e6-82a3-772405d6e7a9",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "formTitle": "DAILY NEWS SUBSCRIPTION FORM",
+        "formDescription": "Choose your preferred NEWS CATEGORY & get DAILY UPDATES in your inbox. FAST, SIMPLE AND FREE",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "NAME",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "EMAIL",
+              "fieldType": "email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "SELECT CATEGORY",
+              "fieldType": "checkbox",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "India"
+                  },
+                  {
+                    "option": "International"
+                  },
+                  {
+                    "option": "Technology"
+                  },
+                  {
+                    "option": "Finance"
+                  },
+                  {
+                    "option": "Sports"
+                  },
+                  {
+                    "option": "Entertainment"
+                  },
+                  {
+                    "option": "Education"
+                  }
+                ]
+              },
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        -3616,
+        32
+      ],
+      "id": "85cbe588-b1ab-447a-8aff-9a70de7bfcdf",
+      "name": "Application Form",
+      "webhookId": "7a08bc02-d768-4958-8748-adba9c3d6269"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.EMAIL }}",
+        "subject": "Thanks for subscribing to Daily News Updates",
+        "emailType": "text",
+        "message": "=Hi {{ $json.NAME }},\nThanks For Subscribing!\nYou will get News Update based on the categories you selected:\n{{ $json['SELECT CATEGORY'] }}\nWe'll keep you updated everyday.\nRegards,\nKaustubh Nikam\n",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -3392,
+        32
+      ],
+      "id": "9b678015-b104-4990-9820-104dabca4949",
+      "name": "Subscription Notification",
+      "webhookId": "7dbc6e93-4329-46e7-adbc-325c59f94063",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "FQhM33z1nX1iwAwr",
+          "name": "TEST"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1EMqGWwjjVXoooNw-wd0RpKo4Ld9q0QcUor8R-smoGQQ",
+          "mode": "list",
+          "cachedResultName": "SUBSCRIBERS DATA",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EMqGWwjjVXoooNw-wd0RpKo4Ld9q0QcUor8R-smoGQQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EMqGWwjjVXoooNw-wd0RpKo4Ld9q0QcUor8R-smoGQQ/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "NAME": "={{ $('Application Form').item.json.NAME }}",
+            "EMAIL": "={{ $('Application Form').item.json.EMAIL }}",
+            "CATEGORIES": "={{ $('Application Form').item.json['SELECT CATEGORY'] }}",
+            "TIMESTAMP": "={{ $('Application Form').item.json.submittedAt }}",
+            "STATUS": "Subscribed"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "NAME",
+              "displayName": "NAME",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "EMAIL",
+              "displayName": "EMAIL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "CATEGORIES",
+              "displayName": "CATEGORIES",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "TIMESTAMP",
+              "displayName": "TIMESTAMP",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "STATUS",
+              "displayName": "STATUS",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -3168,
+        -64
+      ],
+      "id": "791cc23d-fc91-42e9-8765-0ab68e8ba4ec",
+      "name": "Subscribers Data",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "kRcYBUesFEiXSyTl",
+          "name": "TEST"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1EMqGWwjjVXoooNw-wd0RpKo4Ld9q0QcUor8R-smoGQQ",
+          "mode": "list",
+          "cachedResultName": "SUBSCRIBERS DATA",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EMqGWwjjVXoooNw-wd0RpKo4Ld9q0QcUor8R-smoGQQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 312106764,
+          "mode": "list",
+          "cachedResultName": "Sheet2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EMqGWwjjVXoooNw-wd0RpKo4Ld9q0QcUor8R-smoGQQ/edit#gid=312106764"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "EMAIL": "={{ $('Application Form').item.json.EMAIL }}"
+          },
+          "matchingColumns": [
+            "EMAIL"
+          ],
+          "schema": [
+            {
+              "id": "EMAIL",
+              "displayName": "EMAIL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -3168,
+        128
+      ],
+      "id": "8ca5f3eb-5d8a-4352-b5bf-63899c56439f",
+      "name": "Subscribers Email",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "kRcYBUesFEiXSyTl",
+          "name": "TEST"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1EMqGWwjjVXoooNw-wd0RpKo4Ld9q0QcUor8R-smoGQQ",
+          "mode": "list",
+          "cachedResultName": "SUBSCRIBERS DATA",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EMqGWwjjVXoooNw-wd0RpKo4Ld9q0QcUor8R-smoGQQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EMqGWwjjVXoooNw-wd0RpKo4Ld9q0QcUor8R-smoGQQ/edit#gid=0"
+        },
+        "combineFilters": "OR",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -4016,
+        1216
+      ],
+      "id": "7483c9df-855f-47b7-81fa-f727625af624",
+      "name": "Readable Data",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "kRcYBUesFEiXSyTl",
+          "name": "TEST"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Loop Over Items').item.json.CATEGORIES }}",
+                    "rightValue": "\"International\"",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "id": "7adb6889-cbc0-42fc-93f1-1ed407bb9a06"
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -2672,
+        736
+      ],
+      "id": "7e1cf42b-bd79-4abc-a303-03c75b504b2f",
+      "name": "Switch 1"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Loop Over Items').item.json.CATEGORIES }}",
+                    "rightValue": "\"India\"",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "id": "d8cc23e7-c596-42f5-9df3-5df06734d10a"
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -2672,
+        928
+      ],
+      "id": "d0cff5e5-7a15-428a-94c1-ce9e0bcc011a",
+      "name": "Switch 2"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Loop Over Items').item.json.CATEGORIES }}",
+                    "rightValue": "\"Sports\"",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "id": "d74583b5-c5d8-4e6b-8913-780a1a8a200f"
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -2672,
+        1120
+      ],
+      "id": "b83f593d-a061-4619-b9aa-d27c6ef73289",
+      "name": "Switch 3"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Loop Over Items').item.json.CATEGORIES }}",
+                    "rightValue": "\"Entertainment\"",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "id": "0e1a2e9c-0568-4d28-a747-f58be68c72ca"
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -2672,
+        1312
+      ],
+      "id": "52436cf8-a217-4649-8f79-99fe0a901d16",
+      "name": "Switch 4"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "=\n{{ $('Loop Over Items').item.json.CATEGORIES }}",
+                    "rightValue": "\"Technology\"",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "id": "d1acb549-1153-4705-8e09-91775fe2d620"
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -2672,
+        1504
+      ],
+      "id": "83ebd912-6df9-486d-b579-a2006311bfa1",
+      "name": "Switch 5"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Loop Over Items').item.json.CATEGORIES }}",
+                    "rightValue": "=\"Finance\"",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "id": "499a13c2-aa3f-42bc-88df-7ee788307346"
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -2672,
+        1696
+      ],
+      "id": "bdd163ab-1202-4b7b-bc36-7b09c9341c40",
+      "name": "Switch 6",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "jsCode": "// Grab all news items from aggregator\nconst newsItems = $json[\"allNews\"] || [];\n\nlet formattedText = \"\";\n\nnewsItems.forEach((item, index) => {\n    formattedText += `${index + 1}. Title: ${item.title}\\n`;\n    formattedText += `   Content: ${item.content || item.contentSnippet}\\n`;\n    formattedText += `   Link: ${item.link}\\n\\n`;\n});\n\n// Return as single string for LLM input\nreturn [\n    {\n        json: {\n            textForLLM: formattedText\n        }\n    }\n];\n\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1328,
+        1008
+      ],
+      "id": "678fc046-2d79-41cd-890f-14aa2c37c0af",
+      "name": "Text For LLM"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -1040,
+        1232
+      ],
+      "id": "7c162415-80e3-479e-960f-21eb5c943bd8",
+      "name": "GEMINI MODEL",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "LWjHZ0GCj6YYdJnZ",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const summary = $json.output || $json.text || \"\";\n\nreturn [{\n  json: {\n    cleanSummary: summary\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -752,
+        1008
+      ],
+      "id": "33283ed7-21fa-4eb5-898f-f282013f53bf",
+      "name": "Clean Summary",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "jsCode": "function extractText(obj) {\n  if (!obj) return \"\";\n  if (typeof obj === \"string\") return obj;\n  if (typeof obj === \"object\") {\n    // Check common LLM output keys\n    if (obj.text) return extractText(obj.text);\n    if (obj.output) return extractText(obj.output);\n    if (obj.response) return extractText(obj.response);\n    if (obj.result) return extractText(obj.result);\n    if (obj.data) return extractText(obj.data);\n    // Fallback: pick first value\n    const first = Object.values(obj)[0];\n    return extractText(first);\n  }\n  return \"\";\n}\n\nconst summary = extractText($input.item);\nconst email = $('Readable Data').first().json.EMAIL;\nconst subject = \"Daily News Briefing\";\n\nconst body =\n`Hello! We’ve summarized the top developments initiatives for you.:  \n\n${summary}  \n\nFeel free to reply if you’d like more updates or have any suggestions.  \nHave a great day!\n\nIf you want to unsubscribe from daily updates, click here:\nhttp://localhost:5678/webhook/unsubscribe\n\n`;\n\nreturn [{\n  json: { email,subject, body }\n}];\n\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -528,
+        1008
+      ],
+      "id": "59587714-a236-49eb-b163-5d7614eaa73b",
+      "name": "Build Email"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.email }}",
+        "subject": "={{ $json.subject }}",
+        "emailType": "text",
+        "message": "={{ $json.body }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -304,
+        1008
+      ],
+      "id": "9a37b65f-e28a-4cc1-9c63-038a235ebb8e",
+      "name": "Send Email",
+      "webhookId": "433e1e01-43b8-4ddd-860a-19f727aff280",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "FQhM33z1nX1iwAwr",
+          "name": "TEST"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "# BACKEND",
+        "height": 1392,
+        "width": 4416
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -4544,
+        464
+      ],
+      "id": "ac22a96e-d996-4f86-a861-53b8b62231fc",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "# UNSUBSCRIPTION",
+        "height": 256,
+        "width": 1136,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2656,
+        0
+      ],
+      "id": "cf281961-4617-4c6f-a88b-bfb83305cff1",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "# SUBSCRIPTION\n",
+        "height": 368,
+        "width": 784,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -3744,
+        -80
+      ],
+      "id": "d7e6d5e6-d776-423c-aab3-e4c6a0101ff3",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c98efbb2-1880-408c-9f9c-2f5df3487106",
+              "leftValue": "={{ $json.STATUS }}",
+              "rightValue": "Subscribed",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -3568,
+        1216
+      ],
+      "id": "e0ea158c-c9a9-4868-899f-fc0929b0d89e",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b9bae921-d10d-4dbb-987e-7e13aceb6840",
+              "leftValue": "={{ $json.NAME }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -3120,
+        544
+      ],
+      "id": "1f33af41-1728-4622-ad80-878de433e012",
+      "name": "Filter1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "2b9d567f-4ac0-4987-a8b0-8296397b144f",
+              "leftValue": "={{ $json.NAME }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -3120,
+        736
+      ],
+      "id": "fd1867c7-fb33-408b-8a28-1d4da5dd6e7d",
+      "name": "Filter2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "75f88fbe-2d20-4948-ae5b-37b588c974e5",
+              "leftValue": "={{ $json.NAME }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -3120,
+        928
+      ],
+      "id": "56e249c4-c000-48e0-9843-b4f50f0dfd3e",
+      "name": "Filter3"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a9b9e996-87f9-4ce6-8a15-2fd791b480ae",
+              "leftValue": "={{ $json.NAME }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -3120,
+        1120
+      ],
+      "id": "e978b9f8-d144-4012-8d74-15097de9fb29",
+      "name": "Filter4"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1fe42a81-84fb-4ea5-bdc7-91243b450a5d",
+              "leftValue": "={{ $json.NAME }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -3120,
+        1312
+      ],
+      "id": "24c4cebb-7027-453e-97b7-80cd7ed07e5a",
+      "name": "Filter5"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "74e16242-65ae-4301-af53-792e81551d80",
+              "leftValue": "={{ $json.NAME }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -3120,
+        1504
+      ],
+      "id": "7047a022-a36c-493e-a072-e1261f629d22",
+      "name": "Filter6"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "16c2e1c3-8c39-484f-ab01-237842b88478",
+              "leftValue": "={{ $json.NAME }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -3120,
+        1696
+      ],
+      "id": "fa01ce72-d29b-4279-8339-334b10b19e06",
+      "name": "Filter7"
+    },
+    {
+      "parameters": {
+        "maxItems": 5
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        -2224,
+        1696
+      ],
+      "id": "0cdf96a9-09f5-46a9-9e64-157a6d79cfc1",
+      "name": "Limit"
+    },
+    {
+      "parameters": {
+        "maxItems": 5
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        -2224,
+        1120
+      ],
+      "id": "8830f725-2a14-4b4f-8139-c2e762651d00",
+      "name": "Limit1"
+    },
+    {
+      "parameters": {
+        "maxItems": 5
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        -2224,
+        736
+      ],
+      "id": "c831d056-46eb-4170-bd19-4549d819b13a",
+      "name": "Limit2"
+    },
+    {
+      "parameters": {
+        "maxItems": 5
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        -2224,
+        1312
+      ],
+      "id": "6beeadbe-2ad7-4b0a-b2fb-4467abd176d3",
+      "name": "Limit3"
+    },
+    {
+      "parameters": {
+        "maxItems": 5
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        -2224,
+        1504
+      ],
+      "id": "929e3523-6bbe-4ec2-a696-aed1affca5ba",
+      "name": "Limit4"
+    },
+    {
+      "parameters": {
+        "maxItems": 5
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        -2224,
+        928
+      ],
+      "id": "cabc973b-0e8c-4dca-9b48-affbb0abd089",
+      "name": "Limit5"
+    },
+    {
+      "parameters": {
+        "maxItems": 5
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        -2224,
+        544
+      ],
+      "id": "8a0a5af2-4cc9-4701-9ef1-71a83624e7e5",
+      "name": "Limit6"
+    },
+    {
+      "parameters": {
+        "jsCode": "const out = [];\n\nfor (const item of items) {\n  let raw = item.json.CATEGORIES;  // your exact field name is ALL CAPS\n  \n  let arr = [];\n\n  if (typeof raw === \"string\") {\n    try {\n      // Convert the string \"[\\\"India\\\",\\\"Technology\\\"]\" into an array\n      arr = JSON.parse(raw);\n    } catch (e) {\n      // Fallback if somehow fails\n      arr = raw.split(\",\").map(x => x.replace(/[\\[\\]\"]/g, \"\").trim());\n    }\n  }\n\n  // Normalize\n  const cats = arr.map(x => x.toLowerCase());\n\n  // Save final normalized array\n  item.json._cats = cats;\n\n  // Booleans\n  item.json.is_india = cats.includes(\"india\");\n  item.json.is_international = cats.includes(\"international\");\n  item.json.is_technology = cats.includes(\"technology\") || cats.includes(\"tech\");\n  item.json.is_sports = cats.includes(\"sports\");\n  item.json.is_entertainment = cats.includes(\"entertainment\");\n  item.json.is_finance = cats.includes(\"finance\") || cats.includes(\"business\");\n  item.json.is_education = cats.includes(\"education\");\n\n  out.push(item);\n}\n\nreturn out;\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2896,
+        1504
+      ],
+      "id": "497461d5-aefb-4613-8b7e-6afd885dd6ce",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "jsCode": "const out = [];\n\nfor (const item of items) {\n  let raw = item.json.CATEGORIES;  // your exact field name is ALL CAPS\n  \n  let arr = [];\n\n  if (typeof raw === \"string\") {\n    try {\n      // Convert the string \"[\\\"India\\\",\\\"Technology\\\"]\" into an array\n      arr = JSON.parse(raw);\n    } catch (e) {\n      // Fallback if somehow fails\n      arr = raw.split(\",\").map(x => x.replace(/[\\[\\]\"]/g, \"\").trim());\n    }\n  }\n\n  // Normalize\n  const cats = arr.map(x => x.toLowerCase());\n\n  // Save final normalized array\n  item.json._cats = cats;\n\n  // Booleans\n  item.json.is_india = cats.includes(\"india\");\n  item.json.is_international = cats.includes(\"international\");\n  item.json.is_technology = cats.includes(\"technology\") || cats.includes(\"tech\");\n  item.json.is_sports = cats.includes(\"sports\");\n  item.json.is_entertainment = cats.includes(\"entertainment\");\n  item.json.is_finance = cats.includes(\"finance\") || cats.includes(\"business\");\n  item.json.is_education = cats.includes(\"education\");\n\n  out.push(item);\n}\n\nreturn out;\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2896,
+        1312
+      ],
+      "id": "851cbd29-fdea-4a07-b4cd-d94fe5eb67a4",
+      "name": "Code in JavaScript2"
+    },
+    {
+      "parameters": {
+        "jsCode": "const out = [];\n\nfor (const item of items) {\n  let raw = item.json.CATEGORIES;  // your exact field name is ALL CAPS\n  \n  let arr = [];\n\n  if (typeof raw === \"string\") {\n    try {\n      // Convert the string \"[\\\"India\\\",\\\"Technology\\\"]\" into an array\n      arr = JSON.parse(raw);\n    } catch (e) {\n      // Fallback if somehow fails\n      arr = raw.split(\",\").map(x => x.replace(/[\\[\\]\"]/g, \"\").trim());\n    }\n  }\n\n  // Normalize\n  const cats = arr.map(x => x.toLowerCase());\n\n  // Save final normalized array\n  item.json._cats = cats;\n\n  // Booleans\n  item.json.is_india = cats.includes(\"india\");\n  item.json.is_international = cats.includes(\"international\");\n  item.json.is_technology = cats.includes(\"technology\") || cats.includes(\"tech\");\n  item.json.is_sports = cats.includes(\"sports\");\n  item.json.is_entertainment = cats.includes(\"entertainment\");\n  item.json.is_finance = cats.includes(\"finance\") || cats.includes(\"business\");\n  item.json.is_education = cats.includes(\"education\");\n\n  out.push(item);\n}\n\nreturn out;\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2896,
+        1696
+      ],
+      "id": "92a35052-4389-4f50-9499-3e4a7daed345",
+      "name": "Code in JavaScript3"
+    },
+    {
+      "parameters": {
+        "jsCode": "const out = [];\n\nfor (const item of items) {\n  let raw = item.json.CATEGORIES;  // your exact field name is ALL CAPS\n  \n  let arr = [];\n\n  if (typeof raw === \"string\") {\n    try {\n      // Convert the string \"[\\\"India\\\",\\\"Technology\\\"]\" into an array\n      arr = JSON.parse(raw);\n    } catch (e) {\n      // Fallback if somehow fails\n      arr = raw.split(\",\").map(x => x.replace(/[\\[\\]\"]/g, \"\").trim());\n    }\n  }\n\n  // Normalize\n  const cats = arr.map(x => x.toLowerCase());\n\n  // Save final normalized array\n  item.json._cats = cats;\n\n  // Booleans\n  item.json.is_india = cats.includes(\"india\");\n  item.json.is_international = cats.includes(\"international\");\n  item.json.is_technology = cats.includes(\"technology\") || cats.includes(\"tech\");\n  item.json.is_sports = cats.includes(\"sports\");\n  item.json.is_entertainment = cats.includes(\"entertainment\");\n  item.json.is_finance = cats.includes(\"finance\") || cats.includes(\"business\");\n  item.json.is_education = cats.includes(\"education\");\n\n  out.push(item);\n}\n\nreturn out;\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2896,
+        1120
+      ],
+      "id": "ba076a21-01d1-4930-9c32-239dff73d45f",
+      "name": "Code in JavaScript4"
+    },
+    {
+      "parameters": {
+        "jsCode": "const out = [];\n\nfor (const item of items) {\n  let raw = item.json.CATEGORIES;  // your exact field name is ALL CAPS\n  \n  let arr = [];\n\n  if (typeof raw === \"string\") {\n    try {\n      // Convert the string \"[\\\"India\\\",\\\"Technology\\\"]\" into an array\n      arr = JSON.parse(raw);\n    } catch (e) {\n      // Fallback if somehow fails\n      arr = raw.split(\",\").map(x => x.replace(/[\\[\\]\"]/g, \"\").trim());\n    }\n  }\n\n  // Normalize\n  const cats = arr.map(x => x.toLowerCase());\n\n  // Save final normalized array\n  item.json._cats = cats;\n\n  // Booleans\n  item.json.is_india = cats.includes(\"india\");\n  item.json.is_international = cats.includes(\"international\");\n  item.json.is_technology = cats.includes(\"technology\") || cats.includes(\"tech\");\n  item.json.is_sports = cats.includes(\"sports\");\n  item.json.is_entertainment = cats.includes(\"entertainment\");\n  item.json.is_finance = cats.includes(\"finance\") || cats.includes(\"business\");\n  item.json.is_education = cats.includes(\"education\");\n\n  out.push(item);\n}\n\nreturn out;\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2896,
+        544
+      ],
+      "id": "d2e7b7e8-176e-4c38-b2f7-5e7ac57e219e",
+      "name": "Code in JavaScript5"
+    },
+    {
+      "parameters": {
+        "jsCode": "const out = [];\n\nfor (const item of items) {\n  let raw = item.json.CATEGORIES;  // your exact field name is ALL CAPS\n  \n  let arr = [];\n\n  if (typeof raw === \"string\") {\n    try {\n      // Convert the string \"[\\\"India\\\",\\\"Technology\\\"]\" into an array\n      arr = JSON.parse(raw);\n    } catch (e) {\n      // Fallback if somehow fails\n      arr = raw.split(\",\").map(x => x.replace(/[\\[\\]\"]/g, \"\").trim());\n    }\n  }\n\n  // Normalize\n  const cats = arr.map(x => x.toLowerCase());\n\n  // Save final normalized array\n  item.json._cats = cats;\n\n  // Booleans\n  item.json.is_india = cats.includes(\"india\");\n  item.json.is_international = cats.includes(\"international\");\n  item.json.is_technology = cats.includes(\"technology\") || cats.includes(\"tech\");\n  item.json.is_sports = cats.includes(\"sports\");\n  item.json.is_entertainment = cats.includes(\"entertainment\");\n  item.json.is_finance = cats.includes(\"finance\") || cats.includes(\"business\");\n  item.json.is_education = cats.includes(\"education\");\n\n  out.push(item);\n}\n\nreturn out;\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2896,
+        736
+      ],
+      "id": "ba52f959-ce26-4d08-ac3b-96ced9113821",
+      "name": "Code in JavaScript6"
+    },
+    {
+      "parameters": {
+        "jsCode": "const out = [];\n\nfor (const item of items) {\n  let raw = item.json.CATEGORIES;  // your exact field name is ALL CAPS\n  \n  let arr = [];\n\n  if (typeof raw === \"string\") {\n    try {\n      // Convert the string \"[\\\"India\\\",\\\"Technology\\\"]\" into an array\n      arr = JSON.parse(raw);\n    } catch (e) {\n      // Fallback if somehow fails\n      arr = raw.split(\",\").map(x => x.replace(/[\\[\\]\"]/g, \"\").trim());\n    }\n  }\n\n  // Normalize\n  const cats = arr.map(x => x.toLowerCase());\n\n  // Save final normalized array\n  item.json._cats = cats;\n\n  // Booleans\n  item.json.is_india = cats.includes(\"india\");\n  item.json.is_international = cats.includes(\"international\");\n  item.json.is_technology = cats.includes(\"technology\") || cats.includes(\"tech\");\n  item.json.is_sports = cats.includes(\"sports\");\n  item.json.is_entertainment = cats.includes(\"entertainment\");\n  item.json.is_finance = cats.includes(\"finance\") || cats.includes(\"business\");\n  item.json.is_education = cats.includes(\"education\");\n\n  out.push(item);\n}\n\nreturn out;\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2896,
+        928
+      ],
+      "id": "fe7f210a-f56a-4652-afdc-eda6593ad0ed",
+      "name": "Code in JavaScript7"
+    },
+    {
+      "parameters": {
+        "jsCode": "for (const item of items) {\n    try {\n        const categoriesField = item.json.Categories;\n        \n        // Check if it's a string that needs parsing, and not empty\n        if (typeof categoriesField === 'string' && categoriesField.length > 0) {\n            item.json.Categories = JSON.parse(categoriesField);\n        } else if (!Array.isArray(categoriesField)) {\n            // If it's null/undefined/bad data, make it a safe empty array\n            item.json.Categories = [];\n        }\n    } catch (e) {\n        // If parsing fails, ensure it's still a safe empty array\n        item.json.Categories = [];\n    }\n}\nreturn items; // Return ALL items (Ayan, Kaustubh, etc.) to the Loop node."
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3792,
+        1216
+      ],
+      "id": "59e7bdcc-5b3b-4b79-aa28-49d34f889add",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -1776,
+        1104
+      ],
+      "id": "a9e14c2a-fc0a-4bbd-9143-786607132bc1",
+      "name": "Loop Over Items1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "name": "Replace Me",
+      "typeVersion": 1,
+      "position": [
+        -1552,
+        1200
+      ],
+      "id": "043ccb32-13a2-45d2-8f9b-b1efd06eac58"
+    },
+    {
+      "parameters": {
+        "path": "unsubscribe",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -2496,
+        96
+      ],
+      "id": "9ee6c40c-9de9-48a5-859e-9f43169c22c8",
+      "name": "Webhook",
+      "webhookId": "778d02b3-1296-4e59-8e9a-72fdf520349a"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1EMqGWwjjVXoooNw-wd0RpKo4Ld9q0QcUor8R-smoGQQ",
+          "mode": "list",
+          "cachedResultName": "SUBSCRIBERS DATA",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EMqGWwjjVXoooNw-wd0RpKo4Ld9q0QcUor8R-smoGQQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EMqGWwjjVXoooNw-wd0RpKo4Ld9q0QcUor8R-smoGQQ/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -2272,
+        96
+      ],
+      "id": "ab610215-4816-4b32-8bfc-4ec515ec86f7",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "kRcYBUesFEiXSyTl",
+          "name": "TEST"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "2d50eac1-b37f-4bd6-a02b-dbc4211ba1c2",
+              "leftValue": "={{$json.EMAIL}}",
+              "rightValue": "={{$json.email}}",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -2048,
+        96
+      ],
+      "id": "8032ad69-39a0-4ea4-9130-9c5f8879bf6e",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1EMqGWwjjVXoooNw-wd0RpKo4Ld9q0QcUor8R-smoGQQ",
+          "mode": "list",
+          "cachedResultName": "SUBSCRIBERS DATA",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EMqGWwjjVXoooNw-wd0RpKo4Ld9q0QcUor8R-smoGQQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EMqGWwjjVXoooNw-wd0RpKo4Ld9q0QcUor8R-smoGQQ/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "STATUS": "Unsubscribed"
+          },
+          "matchingColumns": [
+            "EMAIL"
+          ],
+          "schema": [
+            {
+              "id": "NAME",
+              "displayName": "NAME",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "EMAIL",
+              "displayName": "EMAIL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "CATEGORIES",
+              "displayName": "CATEGORIES",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "TIMESTAMP",
+              "displayName": "TIMESTAMP",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "STATUS",
+              "displayName": "STATUS",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1856,
+        64
+      ],
+      "id": "48bebc83-63e3-4601-9d45-3aedf3960598",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "kRcYBUesFEiXSyTl",
+          "name": "TEST"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Readable Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Filter1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Filter2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Filter3",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Filter4",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Filter5",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Filter6",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Filter7",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "INTERNATIONAL": {
+      "main": [
+        [
+          {
+            "node": "Limit2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "INDIA": {
+      "main": [
+        [
+          {
+            "node": "Limit5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "EDUCATION": {
+      "main": [
+        [
+          {
+            "node": "Limit6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SPORTS": {
+      "main": [
+        [
+          {
+            "node": "Limit1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ENTERTAINMENT": {
+      "main": [
+        [
+          {
+            "node": "Limit3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TECHNOLOGY": {
+      "main": [
+        [
+          {
+            "node": "Limit4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Text For LLM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Clean Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FINANCE": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "EDUCATION",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Application Form": {
+      "main": [
+        [
+          {
+            "node": "Subscription Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Subscription Notification": {
+      "main": [
+        [
+          {
+            "node": "Subscribers Data",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Subscribers Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Subscribers Data": {
+      "main": [
+        []
+      ]
+    },
+    "Subscribers Email": {
+      "main": [
+        []
+      ]
+    },
+    "Readable Data": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch 1": {
+      "main": [
+        [
+          {
+            "node": "INTERNATIONAL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch 2": {
+      "main": [
+        [
+          {
+            "node": "INDIA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch 3": {
+      "main": [
+        [
+          {
+            "node": "SPORTS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch 4": {
+      "main": [
+        [
+          {
+            "node": "ENTERTAINMENT",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch 5": {
+      "main": [
+        [
+          {
+            "node": "TECHNOLOGY",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch 6": {
+      "main": [
+        [
+          {
+            "node": "FINANCE",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text For LLM": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GEMINI MODEL": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean Summary": {
+      "main": [
+        [
+          {
+            "node": "Build Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Email": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter2": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter3": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter4": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter5": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter6": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter7": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 6
+          }
+        ]
+      ]
+    },
+    "Limit4": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 5
+          }
+        ]
+      ]
+    },
+    "Limit3": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 4
+          }
+        ]
+      ]
+    },
+    "Limit1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Limit5": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Limit2": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Limit6": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Switch 5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "node": "Switch 4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript3": {
+      "main": [
+        [
+          {
+            "node": "Switch 6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript4": {
+      "main": [
+        [
+          {
+            "node": "Switch 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript7": {
+      "main": [
+        [
+          {
+            "node": "Switch 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript6": {
+      "main": [
+        [
+          {
+            "node": "Switch 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript5": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items1": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Replace Me",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Replace Me": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "7a08d638-ed6d-4d08-892c-a5643e95b386",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "52f60827830c685e692e7ac1a41f92d4b090b0b114e6156a09cdf67688370a0d"
+  },
+  "id": "7s5b6m1O9GR7o2I7",
+  "tags": []
+}
